@@ -27,7 +27,7 @@
             :ref="'cell' + rowIndex + colIndex"
             v-for="(col, colIndex) in row"
             :key="colIndex"
-            @click="turnOver([rowIndex, colIndex], col)"
+            @click="turnOver([rowIndex, colIndex], col, 12)"
           ></div>
         </div>
       </div>
@@ -39,26 +39,11 @@ export default {
   props: ["gameId"],
   data() {
     return {
-      sample: [
-        [0, 1, 0, -1, 0, 1, 0],
-        [1, 1, 1, -1, 0, 1, 0],
-        [0, 1, 0, -1, 0, 1, 0],
-        [0, 1, 1, -1, -1, 1, 0],
-        [0, 1, 0, -1, 1, 1, 0],
-        [0, 1, 0, -1, 0, 1, 0],
-        [0, 1, 0, -1, 0, 1, 0],
-      ],
-      field: [
-        [0, 1, 0, -1, 0, 1, 0],
-        [1, 1, 1, -1, 0, 1, 0],
-        [0, 1, 0, -1, 0, 1, 0],
-        [0, 1, 1, -1, -1, 1, 0],
-        [0, 1, 0, -1, 1, 1, 0],
-        [0, 1, 0, -1, 0, 1, 0],
-        [0, 1, 0, -1, 0, 1, 0],
-      ],
-      fieldWidth: 7,
-      fieldHeight: 7,
+      sample: [[]],
+      field: [[]],
+      fieldWidth: "",
+      fieldHeight: "",
+      isAbleTouch: true,
     };
   },
   methods: {
@@ -72,9 +57,10 @@ export default {
           return "cell-1";
       }
     },
-    turnOver(cell, num) {
-      if (num == 0) return;
-      this.turnOverAnimaitionCall(cell, 0);
+    turnOver(cell, num, sec) {
+      if (num == 0 || !this.isAbleTouch) return;
+      this.isAbleTouch = false;
+      this.turnOverAnimaitionCall(cell, 0, sec);
       setTimeout(() => {
         for (let i = -1; i < 2; i++) {
           for (let j = -1; j < 2; j++) {
@@ -82,23 +68,28 @@ export default {
               let targetCell = [cell[0] + i, cell[1] + j];
               if (this.isInclude(targetCell)) {
                 if (this.field[targetCell[0]][targetCell[1]] != 0) {
-                  this.turnOverAnimaitionCall(targetCell, 0);
+                  this.turnOverAnimaitionCall(targetCell, 0, sec);
                 }
               }
             }
           }
         }
-      }, 100);
+      }, sec * 9);
       setTimeout(() => {
-        this.judge();
-      }, 540);
+        if (this.judge()) {
+          console.log("success");
+        } else {
+          this.isAbleTouch = true;
+          console.log(this.field);
+        }
+      }, sec * 45);
     },
-    turnOverAnimaitionCall(cell, deg) {
+    turnOverAnimaitionCall(cell, deg, sec) {
       if (deg <= 180) {
         this.turnOverAnimaition(cell, deg);
         setTimeout(() => {
-          this.turnOverAnimaitionCall(cell, (deg += 5));
-        }, 12);
+          this.turnOverAnimaitionCall(cell, (deg += 5), sec);
+        }, sec);
       }
     },
     turnOverAnimaition(cell, deg) {
@@ -133,6 +124,28 @@ export default {
       return true;
     },
   },
+  beforeMount() {
+    const defaultArr = this.$store.state.fields[this.gameId].sample;
+    const touch = this.$store.state.fields[this.gameId].touch;
+    this.field = JSON.parse(JSON.stringify(defaultArr));
+    this.sample = defaultArr;
+    this.fieldWidth = defaultArr.length;
+    this.fieldHeight = defaultArr[0].length;
+    for (let p = 0; p < touch.length; p++) {
+      for (let i = -1; i < 2; i++) {
+        for (let j = -1; j < 2; j++) {
+          let targetCell = [touch[p][0] + i, touch[p][1] + j];
+          if (this.isInclude(targetCell)) {
+            this.field[targetCell[0]].splice(
+              targetCell[1],
+              1,
+              this.field[targetCell[0]][targetCell[1]] * -1
+            );
+          }
+        }
+      }
+    }
+  },
 };
 </script>
 <style scoped>
@@ -142,16 +155,12 @@ export default {
 .sample {
   width: 50%;
   height: 30vh;
-  /* width: 250px;
-  height: 350px; */
   margin: 0 auto;
   margin-bottom: 10px;
 }
 .answer {
   width: 90%;
   height: 50vh;
-  /* width: 500px;
-  height: 700px; */
   margin: 0 auto;
 }
 .field {
@@ -170,7 +179,7 @@ export default {
 }
 .col {
   text-align: center;
-  border: 2px solid rgb(165, 156, 156);
+  border: 1px solid rgb(165, 156, 156);
 }
 .cell0 {
   background-color: black;
