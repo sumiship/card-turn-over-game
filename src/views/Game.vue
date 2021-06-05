@@ -1,6 +1,7 @@
 <template>
   <div class="game">
-    game: {{ gameId }}
+    Stage {{ gameId + 1 }}
+    <div class="complete" v-if="isFinished">succsess</div>
     <div class="sample">
       <div class="field">
         <div class="row" v-for="(row, rowIndex) in sample" :key="rowIndex">
@@ -44,6 +45,7 @@ export default {
       fieldWidth: "",
       fieldHeight: "",
       isAbleTouch: true,
+      isFinished: false,
     };
   },
   methods: {
@@ -77,7 +79,9 @@ export default {
       }, sec * 9);
       setTimeout(() => {
         if (this.judge()) {
-          console.log("success");
+          this.isFinished = true;
+          this.$store.dispatch("complete", this.gameId);
+          this.$store.dispatch("saveComplete");
         } else {
           this.isAbleTouch = true;
           console.log(this.field);
@@ -129,8 +133,8 @@ export default {
     const touch = this.$store.state.fields[this.gameId].touch;
     this.field = JSON.parse(JSON.stringify(defaultArr));
     this.sample = defaultArr;
-    this.fieldWidth = defaultArr.length;
-    this.fieldHeight = defaultArr[0].length;
+    this.fieldWidth = defaultArr[0].length;
+    this.fieldHeight = defaultArr.length;
     for (let p = 0; p < touch.length; p++) {
       for (let i = -1; i < 2; i++) {
         for (let j = -1; j < 2; j++) {
@@ -151,6 +155,17 @@ export default {
 <style scoped>
 .game {
   height: calc(100vh - 112px);
+}
+.complete {
+  position: absolute;
+  text-shadow: 1px 0 0 #fff, 0 1px 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff,
+    3px 3px 0 #fff;
+  color: #ec6d72;
+  font-size: 70px;
+  font-weight: bold;
+  background-color: rgba(23, 150, 167, 0.534);
+  width: 100%;
+  margin-top: 30px;
 }
 .sample {
   width: 50%;
@@ -193,5 +208,10 @@ export default {
   background-image: url("~@/assets/logo.png");
   background-size: cover;
   background-position: center;
+}
+@media screen and (min-width: 600px) {
+  .complete {
+    width: 600px;
+  }
 }
 </style>
