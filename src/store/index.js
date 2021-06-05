@@ -68,41 +68,45 @@ export default new Vuex.Store({
       },
       {
         sample: [
-          [0, 1, 0, -1, 0, 1, 0],
-          [1, 1, 1, -1, 0, 1, 0],
-          [0, 1, 0, -1, 0, 1, 0],
-          [0, 1, 1, -1, -1, 1, 0],
-          [0, 1, 0, -1, 1, 1, 0],
-          [0, 1, 0, -1, 0, 1, 0],
-          [0, 1, 0, -1, 0, 1, 0],
+          [-1, 1, -1, 1],
+          [1, -1, 1, -1],
+          [-1, 1, -1, 1],
+          [1, -1, 1, -1],
         ],
-        touch: [[1, 1]],
+        touch: [
+          [0, 0],
+          [3, 3],
+        ],
         completed: false,
       },
       {
         sample: [
-          [0, 1, 0, -1, 0, 1, 0],
-          [1, 1, 1, -1, 0, 1, 0],
-          [0, 1, 0, -1, 0, 1, 0],
-          [0, 1, 1, -1, -1, 1, 0],
-          [0, 1, 0, -1, 1, 1, 0],
-          [0, 1, 0, -1, 0, 1, 0],
-          [0, 1, 0, -1, 0, 1, 0],
+          [-1, 1, 1, -1],
+          [1, -1, -1, 1],
+          [1, -1, -1, 1],
+          [-1, 1, 1, -1],
         ],
-        touch: [[1, 1]],
+        touch: [
+          [1, 1],
+          [2, 2],
+        ],
         completed: false,
       },
       {
         sample: [
-          [0, 1, 0, -1, 0, 1, 0],
-          [1, 1, 1, -1, 0, 1, 0],
-          [0, 1, 0, -1, 0, 1, 0],
-          [0, 1, 1, -1, -1, 1, 0],
-          [0, 1, 0, -1, 1, 1, 0],
-          [0, 1, 0, -1, 0, 1, 0],
-          [0, 1, 0, -1, 0, 1, 0],
+          [1, 1, 1, 1, 1],
+          [1, -1, -1, -1, 1],
+          [-1, 0, -1, 0, -1],
+          [-1, -1, -1, -1, -1],
+          [-1, 0, 0, 0, -1],
+          [-1, -1, -1, -1, -1],
         ],
-        touch: [[1, 1]],
+        touch: [
+          [1, 1],
+          [1, 3],
+          [2, 2],
+          [5, 2],
+        ],
         completed: false,
       },
       {
@@ -170,12 +174,13 @@ export default new Vuex.Store({
       context.commit("complete", id);
     },
     saveComplete(context) {
-      console.log(context);
-      let completedArr = [];
-      for (let i = 0; i < this.state.fields.length; i++) {
-        completedArr.push(this.state.fields[i].completed);
+      if (context) {
+        let completedArr = [];
+        for (let i = 0; i < this.state.fields.length; i++) {
+          completedArr.push(this.state.fields[i].completed);
+        }
+        localStorage.completed = JSON.stringify(completedArr);
       }
-      localStorage.completed = JSON.stringify(completedArr);
     },
     roadComplete(context) {
       if (localStorage.completed) {
