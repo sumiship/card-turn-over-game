@@ -1,6 +1,7 @@
 <template>
   <div class="game">
-    Stage {{ gameId + 1 }}
+    time: {{ time.toFixed(2) }}
+    <button @click="timeCount()">time</button>
     <div class="complete" v-if="isFinished">succsess</div>
     <div class="sample">
       <div class="field">
@@ -47,6 +48,7 @@ export default {
       moves: "",
       isAbleTouch: true,
       isFinished: false,
+      time: 30,
     };
   },
   methods: {
@@ -81,9 +83,15 @@ export default {
       setTimeout(() => {
         if (this.judge()) {
           this.isFinished = true;
+          this.time += 10;
+          setTimeout(() => {
+            this.isFinished = false;
+            this.isAbleTouch = true;
+            this.createArr();
+            this.timeCount();
+          }, 3000);
         } else {
           this.isAbleTouch = true;
-          console.log(this.field);
         }
       }, sec * 45);
     },
@@ -144,6 +152,7 @@ export default {
       for (let i = 0; i < this.moves; i++) {
         touch.push(this.random(touchList));
       }
+      console.log(touch);
       let Arr = [];
       for (let i = 0; i < this.fieldHeight; i++) {
         let row = [];
@@ -168,6 +177,20 @@ export default {
           }
         }
       }
+    },
+    timeCount() {
+      let sub = () => {
+        this.time -= 0.01;
+      };
+      let roop = () => {
+        setTimeout(() => {
+          if (!this.isFinished && this.time > 0) {
+            sub();
+            roop();
+          }
+        }, 10);
+      };
+      roop();
     },
   },
   beforeMount() {
