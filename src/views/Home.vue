@@ -1,12 +1,13 @@
 <template>
   <div class="home">
-    <!-- <button @click="saveTest()">saveTest</button>
-    <button @click="intoTest()">intoTest</button>
-    <button @click="roadTest()">roadTest</button> -->
     <div class="stages">
+      <div class="stage ex" @click="$router.push({ name: 'Endless30' })">
+        <p>Endless30s</p>
+        <p>3×3〜4×4</p>
+      </div>
       <div
         class="stage"
-        :class='{completed: stage.completed}'
+        :class="{ completed: stage.completed }"
         v-for="(stage, index) in stages"
         :key="index"
         @click="goto(index)"
@@ -93,7 +94,7 @@ export default {
   height: 230px;
   border-radius: 12px;
 }
-.stage.completed{
+.stage.completed {
   border-color: deeppink;
   background-color: rgb(224, 169, 224);
 }
