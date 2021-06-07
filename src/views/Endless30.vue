@@ -216,6 +216,7 @@ export default {
       roop();
     },
     reset() {
+      if (!this.isAbleTouch) return;
       for (let i = 0; i < this.fieldHeight; i++) {
         for (let j = 0; j < this.fieldWidth; j++) {
           if (this.field[i][j] != this.originalField[i][j]) {
