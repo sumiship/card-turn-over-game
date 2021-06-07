@@ -96,6 +96,7 @@ export default {
   width: 150px;
   height: 230px;
   border-radius: 12px;
+  cursor: pointer;
 }
 .stage.ex {
   border-color: yellow;

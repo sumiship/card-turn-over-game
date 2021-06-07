@@ -259,14 +259,16 @@ export default {
 }
 .sample {
   width: 50%;
-  height: 30vh;
+  height: 30%;
   margin: 0 auto;
   margin-bottom: 10px;
 }
 .answer {
   width: 90%;
-  height: 50vh;
+  height: 50%;
   margin: 0 auto;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 .field {
   display: flex;
@@ -305,6 +307,8 @@ export default {
   width: 110px;
   margin: 0 auto;
   border-radius: 20px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 @media screen and (min-width: 600px) {
   .complete {
