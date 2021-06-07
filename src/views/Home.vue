@@ -75,7 +75,7 @@ export default {
 </script>
 <style scoped>
 .home {
-  height: calc(100vh - 112px);
+  height: calc(100vh - 72px);
 }
 .stages {
   width: 95%;

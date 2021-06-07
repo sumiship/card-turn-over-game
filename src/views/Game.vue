@@ -154,7 +154,7 @@ export default {
 </script>
 <style scoped>
 .game {
-  height: calc(100vh - 112px);
+  height: calc(100vh - 72px);
 }
 .complete {
   position: absolute;

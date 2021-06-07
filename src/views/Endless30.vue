@@ -1,8 +1,15 @@
 <template>
   <div class="game">
-    time: {{ time.toFixed(2) }}
-    <button @click="timeCount()">time</button>
-    <div class="complete" v-if="isFinished">succsess</div>
+    <div class="board">
+      <p>time: {{ time.toFixed(2) }}</p>
+      <p>score: {{ score }}</p>
+      <p>moves: {{ moves }}</p>
+    </div>
+    <div class="complete" v-if="interval">succsess</div>
+    <div class="complete" v-if="gameSet">
+      <p>Finish</p>
+      <p>score: {{score}} !!</p>
+    </div>
     <div class="sample">
       <div class="field">
         <div class="row" v-for="(row, rowIndex) in sample" :key="rowIndex">
@@ -34,6 +41,9 @@
         </div>
       </div>
     </div>
+    <div>
+      <p class="reset" @click="reset()">reset</p>
+    </div>
   </div>
 </template>
 <script>
@@ -43,12 +53,16 @@ export default {
     return {
       sample: [[]],
       field: [[]],
+      originalField: [[]],
       fieldWidth: "",
       fieldHeight: "",
       moves: "",
       isAbleTouch: true,
       isFinished: false,
+      interval: false,
+      gameSet: false,
       time: 30,
+      score: 0,
     };
   },
   methods: {
@@ -63,7 +77,7 @@ export default {
       }
     },
     turnOver(cell, num, sec) {
-      if (num == 0 || !this.isAbleTouch) return;
+      if (num == 0 || !this.isAbleTouch || this.gameSet) return;
       this.isAbleTouch = false;
       this.turnOverAnimaitionCall(cell, 0, sec);
       setTimeout(() => {
@@ -82,13 +96,18 @@ export default {
       }, sec * 9);
       setTimeout(() => {
         if (this.judge()) {
+          this.interval = true;
           this.isFinished = true;
-          this.time += 10;
+          this.score += this.moves;
           setTimeout(() => {
             this.isFinished = false;
+            this.timeCount(2, this.time + 10, 1);
+          }, 300);
+          setTimeout(() => {
+            this.interval = false;
             this.isAbleTouch = true;
             this.createArr();
-            this.timeCount();
+            this.timeCount(-1, 1000000, 10);
           }, 3000);
         } else {
           this.isAbleTouch = true;
@@ -177,30 +196,44 @@ export default {
           }
         }
       }
+      this.originalField = JSON.parse(JSON.stringify(this.field));
     },
-    timeCount() {
+    timeCount(pm, fin, fast) {
       let sub = () => {
-        this.time -= 0.01;
+        this.time += 0.01 * pm;
       };
       let roop = () => {
         setTimeout(() => {
-          if (!this.isFinished && this.time > 0) {
+          if (this.time <= 0) {
+            this.gameSet = true;
+          }
+          if (!this.isFinished && this.time > 0 && this.time < fin) {
             sub();
             roop();
           }
-        }, 10);
+        }, fast);
       };
       roop();
+    },
+    reset() {
+      for (let i = 0; i < this.fieldHeight; i++) {
+        for (let j = 0; j < this.fieldWidth; j++) {
+          if (this.field[i][j] != this.originalField[i][j]) {
+            this.turnOverAnimaitionCall([i, j], 0, 7);
+          }
+        }
+      }
     },
   },
   beforeMount() {
     this.createArr();
+    this.timeCount(-1, 1000000, 10);
   },
 };
 </script>
 <style scoped>
 .game {
-  height: calc(100vh - 112px);
+  height: calc(100vh - 72px);
 }
 .complete {
   position: absolute;
@@ -212,6 +245,16 @@ export default {
   background-color: rgba(23, 150, 167, 0.534);
   width: 100%;
   margin-top: 30px;
+}
+.board {
+  background-color: rgba(23, 150, 167, 0.534);
+  height: 60px;
+  display: flex;
+  justify-content: space-around;
+}
+.board p {
+  line-height: 60px;
+  font-size: 40px;
 }
 .sample {
   width: 50%;
@@ -254,6 +297,13 @@ export default {
   background-image: url("~@/assets/logo.png");
   background-size: cover;
   background-position: center;
+}
+.reset {
+  background-color: cadetblue;
+  font-size: 30px;
+  width: 110px;
+  margin: 0 auto;
+  border-radius: 20px;
 }
 @media screen and (min-width: 600px) {
   .complete {
