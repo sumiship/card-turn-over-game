@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    endless30best: 0,
     fields: [
       {
         sample: [
@@ -175,13 +176,26 @@ export default new Vuex.Store({
     ],
   },
   mutations: {
+    end30best(state, payload) {
+      state.endless30best = payload;
+    },
     complete(state, payload) {
       state.fields[payload].completed = true;
     },
   },
   actions: {
+    end30best(context, score) {
+      if (this.state.endless30best < score) {
+        context.commit("end30best", score);
+        localStorage.endless30best = score;
+      }
+    },
+    loadEnd30best(context) {
+      if (localStorage.endless30best) {
+        context.commit("end30best", localStorage.endless30best);
+      }
+    },
     complete(context, id) {
-      console.log(id);
       context.commit("complete", id);
     },
     saveComplete(context) {

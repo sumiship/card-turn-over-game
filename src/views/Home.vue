@@ -2,8 +2,10 @@
   <div class="home">
     <div class="stages">
       <div class="stage ex" @click="$router.push({ name: 'Endless30' })">
-        <p>Endless30s</p>
+        <p class="title">Endless30s</p>
         <p>3×3〜4×4</p>
+        <p>moves: 1~3</p>
+        <p>best: {{ $store.state.endless30best }}</p>
       </div>
       <div
         class="stage"
@@ -70,6 +72,7 @@ export default {
   beforeMount() {
     this.stages = this.$store.state.fields;
     this.$store.dispatch("roadComplete");
+    this.$store.dispatch("loadEnd30best");
   },
 };
 </script>
@@ -93,6 +96,13 @@ export default {
   width: 150px;
   height: 230px;
   border-radius: 12px;
+}
+.stage.ex {
+  border-color: yellow;
+  background-color: rgb(248, 239, 160);
+}
+.stage.ex .title {
+  font-size: 23px;
 }
 .stage.completed {
   border-color: deeppink;

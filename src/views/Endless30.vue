@@ -8,7 +8,7 @@
     <div class="complete" v-if="interval">succsess</div>
     <div class="complete" v-if="gameSet">
       <p>Finish</p>
-      <p>score: {{score}} !!</p>
+      <p>score: {{ score }} !!</p>
     </div>
     <div class="sample">
       <div class="field">
@@ -206,8 +206,8 @@ export default {
         setTimeout(() => {
           if (this.time <= 0) {
             this.gameSet = true;
-          }
-          if (!this.isFinished && this.time > 0 && this.time < fin) {
+            this.$store.dispatch("end30best", this.score);
+          } else if (!this.isFinished && this.time < fin) {
             sub();
             roop();
           }
