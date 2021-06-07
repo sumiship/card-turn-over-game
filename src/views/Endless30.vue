@@ -1,9 +1,9 @@
 <template>
   <div class="game">
     <div class="board">
-      <p>time: {{ time.toFixed(2) }}</p>
-      <p>score: {{ score }}</p>
-      <p>moves: {{ moves }}</p>
+      <p>{{ time.toFixed(2) }}s</p>
+      <p>{{ score }}point</p>
+      <p>{{ moves }}手</p>
     </div>
     <div class="complete" v-if="interval">succsess</div>
     <div class="complete" v-if="gameSet">
