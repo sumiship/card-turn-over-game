@@ -171,7 +171,6 @@ export default {
       for (let i = 0; i < this.moves; i++) {
         touch.push(this.random(touchList));
       }
-      console.log(touch);
       let Arr = [];
       for (let i = 0; i < this.fieldHeight; i++) {
         let row = [];
@@ -206,6 +205,7 @@ export default {
         setTimeout(() => {
           if (this.time <= 0) {
             this.gameSet = true;
+            this.time = 0;
             this.$store.dispatch("end30best", this.score);
           } else if (!this.isFinished && this.time < fin) {
             sub();

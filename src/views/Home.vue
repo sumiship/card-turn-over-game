@@ -5,7 +5,7 @@
         <p class="title">Endless30s</p>
         <p>3×3〜4×4</p>
         <p>moves: 1~3</p>
-        <p>best: {{ $store.state.endless30best }}</p>
+        <p class="best">best: {{ $store.state.endless30best }}</p>
       </div>
       <div
         class="stage"
@@ -103,6 +103,9 @@ export default {
 }
 .stage.ex .title {
   font-size: 23px;
+}
+.stage.ex .best{
+  font-size: 30px;
 }
 .stage.completed {
   border-color: deeppink;

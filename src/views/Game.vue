@@ -33,6 +33,9 @@
         </div>
       </div>
     </div>
+    <div>
+      <p class="reset" @click="reset()">reset</p>
+    </div>
   </div>
 </template>
 <script>
@@ -46,6 +49,7 @@ export default {
       fieldHeight: "",
       isAbleTouch: true,
       isFinished: false,
+      originalArr: [[]],
     };
   },
   methods: {
@@ -84,7 +88,6 @@ export default {
           this.$store.dispatch("saveComplete");
         } else {
           this.isAbleTouch = true;
-          console.log(this.field);
         }
       }, sec * 45);
     },
@@ -127,6 +130,15 @@ export default {
       }
       return true;
     },
+    reset() {
+      for (let i = 0; i < this.fieldHeight; i++) {
+        for (let j = 0; j < this.fieldWidth; j++) {
+          if (this.field[i][j] != this.originalArr[i][j]) {
+            this.turnOverAnimaitionCall([i, j], 0, 7);
+          }
+        }
+      }
+    },
   },
   beforeMount() {
     const defaultArr = this.$store.state.fields[this.gameId].sample;
@@ -149,6 +161,7 @@ export default {
         }
       }
     }
+    this.originalArr = JSON.parse(JSON.stringify(this.field));
   },
 };
 </script>
@@ -208,6 +221,13 @@ export default {
   background-image: url("~@/assets/logo.png");
   background-size: cover;
   background-position: center;
+}
+.reset {
+  background-color: cadetblue;
+  font-size: 30px;
+  width: 110px;
+  margin: 0 auto;
+  border-radius: 20px;
 }
 @media screen and (min-width: 600px) {
   .complete {
